@@ -1,10 +1,10 @@
 #EXTM3U
 
-#EXTINF:-1 tvg-id="Bloomberg TV USA-US" tvg-name="Bloomberg TV USA-US" tvg-language="English" tvg-logo="https://i.imgur.com/idRFfhY.png" tvg-country="US" tvg-url="http://epg.streamstv.me/epg/guide-usa.xml.gz",Bloomberg TV
+#EXTINF:-1 tvg-logo="http://bl00mb3rg.kaloyan.info/tvg-logo/bloomberg.png",Bloomberg TV
 https://liveproduseast.global.ssl.fastly.net/us/Channel-USTV-AWS-virginia-1/Source-USTV-1000-1_live.m3u8
 
-#EXTINF:-1 tvg-logo="https://consortiumnews.com/wp-content/uploads/2018/03/MSNBC_logo.png",MSNВС 
-https://1886592016.rsc.cdn77.org/cEB6iDNX8IYU9aKsV_l35Q==,1567495317/LS-ATL-54548-15/tracks-v1a1/mono.m3u8
+#EXTINF:-1 tvg-logo="http://bl00mb3rg.kaloyan.info/tvg-logo/msnbc.png",MSNВС
+https://1420543146.rsc.cdn77.org/kqyJ6rSVqz2Yb-8rUPpm1Q==,1574236204/LS-ATL-54548-10/index.m3u8
 
 #EXTINF:-1 tvg-logo="https://images-na.ssl-images-amazon.com/images/I/51UjITm0Z-L._SY355_.png",CBS News
 https://cbsn-us-cedexis.cbsnstream.cbsnews.com/out/v1/55a8648e8f134e82a470f83d562deeca/master.m3u8?iu=/8264/vaw-can/desktop/cbsnews
@@ -17,3 +17,18 @@ http://103.199.161.254/Content/bbcworld/Live/Channel(BBCworld)/index.m3u8
 
 #EXTINF:-1 tvg-logo="http://bl00mb3rg.kaloyan.info/tvg-logo/bbc-news.png",BBC News
 https://streamingserver003.viewtvgroup.com/kapanglocal-playout-master/tracks-v1a1/mono.m3u8
+
+#EXTINF:-1,Fox Business Network
+https://1329918864.rsc.cdn77.org/ls-54548-1/index.m3u8
+
+#EXTINF:-1, tvg-logo="https://keyframe-cdn.abcnews.com/streamprovider6.jpg",ABC News
+https://content.uplynk.com/channel/3324f2467c414329b3b0cc5cd987b6be.m3u8
+
+#EXTINF:-1,Disney Junior
+https://content-ause4.uplynk.com/channel/2696c852412a4041ba3b771e0a5e3c74/h.m3u8?exp=1557726334&ct=c&cid=2696c852412a4041ba3b771e0a5e3c74&iph=dfedfaaeca06c9f40140cd2a0ac49a55790c044d07d90e043edad3ab32e2f603&rays=hjigfedcba&euid=5F8C9D89-CA39-4C23-9A6B-2A6A0A145CCB_013_1_001_live_04-06-99_1.1.1.15&cdn=ec&stgcfg=datg&pp2ip=0&delay=10800&ddp=1&expand=drmOff&v=3&sig=a07044f5b44c510bab5cd40a76b8b5839f0711064f090d2747280ebd7798e0dc&pbs=377d94b7fb794124b73c58474a01270a
+
+#EXTINF:-1,Fine Living
+http://70.32.0.9:5000/live/543/playlist.m3u8
+
+#EXTINF:-1,CNBC
+http://live.redtraffic.xyz/teen.m3u8
