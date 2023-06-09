@@ -5,28 +5,26 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<link href="https://unpkg.com/video.js@7/dist/video-js.min.css" rel="stylesheet" />
+	<link href="https://unpkg.com/@videojs/themes@1/dist/city/index.css" rel="stylesheet" />
+
 	<title>Bloomberg Live</title>
 </head>
 <body style="background:#000">
 
-	<video id="example-video" width="960" height="600" class="video-js vjs-default-skin" controls style="margin: 0 auto;">
-	<source src="https://www.bloomberg.com/media-manifest/streams/phoenix-us.m3u8" type="application/x-mpegURL">
+	<video
+    id="my-video"
+    class="video-js"
+    controls
+    preload="auto"
+    width="960"
+    height="600"
+    poster="MY_VIDEO_POSTER.jpg"
+    data-setup="{}"
+  >
+		<source src="https://www.bloomberg.com/media-manifest/streams/phoenix-us.m3u8" type="application/x-mpegURL">
 	</video>
 
-	<!-- Bootstrap stuff. These three scripts aren't necessary for you to use videojs-contrib-hls -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-	
-	<!-- Include video.js and videojs-contrib-hls in your page -->
-	<script src="https://unpkg.com/video.js/dist/video.js"></script>
-	<script src="https://unpkg.com/videojs-flash/dist/videojs-flash.js"></script>
-	<script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
-
-	<script>
-	(function(window, videojs) {
-		var player = window.player = videojs('example-video');
-		player.play();
-		}(window, window.videojs));
-	</script>
-	
-	<link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+	<script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>	
 </body></html>
