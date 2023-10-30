@@ -1,0 +1,349 @@
+<html>
+<head>
+<title>Umnoto &mdash; Meme Generator</title>
+<meta charset="UTF-8" />
+<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet" />
+</head>
+<body>
+<table style="width:100%">
+<tr>
+<td style="width:40%;vertical-align:top">
+<h2>Umnoto &mdash; Meme Generator</h2>
+<fieldset>
+	<legend>Generate Quote</legend>
+
+	<label for="text">Quote Text</label><br/>
+	<textarea id="text" style="width:100%;height:100px">Не пикай срещу вятъра.</textarea><br/>
+	<br/>
+
+	<label for="author">Quote Author</label><br/>
+	<input id="author" style="width:100%" value="една баба така каза"/><br/>
+	<br/>
+
+	<hr/><br/>
+
+	<label for="font">Font</label><br/>
+	<select id="font">
+		<option>PT Serif</option>
+		<option>Roboto Slab</option>
+	</select><br/>
+	<br/>
+
+	<label for="image_url">Image URL</label><br/>
+	<input id="image_url" style="width:100%"
+		value="https://c1.staticflickr.com/5/4224/35024692520_0efb269ce6_b.jpg"
+		value2="https://c2.staticflickr.com/4/3786/10819630063_cba6793725_b.jpg"/><br/>
+	<br/>
+
+	<label for="image_author">Image Author</label><br/>
+	<input id="image_author" style="width:50%" value="IzabelaWinter"/><br/>
+	<br/>
+
+	<label for="image_author_url">Image Author URL</label><br/>
+	<input id="image_author_url" style="width:70%" value="https://flic.kr/p/Vn1GQY"/><br/>
+	<br/>
+
+	<input id="button" type="button" value="Generate"/>
+</fieldset>
+</td><td style="width:60%;text-align:center">
+	<canvas id="image" width="1080" height="1080"
+		style="background-image:
+linear-gradient(45deg, #ccc 25%, transparent 25%),
+linear-gradient(135deg, #ccc 25%, transparent 25%),
+linear-gradient(45deg, transparent 75%, #ccc 75%),
+linear-gradient(135deg, transparent 75%, #ccc 75%);
+background-size:25px 25px; /* Must be a square */
+background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px;"></canvas>
+</td>
+</tr>
+</table>
+
+<script>
+umnoto = {
+	config: {},
+	context: null,
+	width: 0,
+	height: 0,
+
+	lines: []
+}
+umnoto.clear = function()
+{
+	this.context.clearRect(0, 0, this.width, this.height);
+}
+umnoto.background_color = function()
+{
+	this.context.fillStyle = "black";
+        this.context.fillRect(0, 0, this.width, this.height);
+}
+umnoto.get_image = function()
+{
+	let source = new Image();
+	source.src = document.getElementById("image_url").value;
+	return source;
+}
+umnoto.image_destination = function(source)
+{
+	let w, h, d;
+	d = (source.width >= source.height)
+		? source.height
+		: source.width;
+	w = this.width * (source.width/d) + this.config.offset_width;
+	h = this.height * (source.height/d) + this.config.offset_height;
+
+	return {
+		x: 0-(w - this.width)/2,
+		y: 0-(h - this.height)/2,
+		w: w,
+		h: h
+	}
+}
+umnoto.background_image = function()
+{
+	let source = this.get_image();
+	let d = this.image_destination(source);
+	this.context.drawImage(source, d.x, d.y, d.w, d.h);
+}
+umnoto.get_quote_text = function()
+{
+	return this.quote = document.getElementById("text").value.trim().toUpperCase();
+}
+umnoto.text_font = function()
+{
+	this.context.font = this.get_font_size() + "px " + this.get_font_family();
+}
+umnoto.text_lines = function()
+{
+	var width_max = this.get_max_text_width();
+	var words = this.get_quote_text().split(" ");
+	var lines = [];
+	var current_line = words[0];
+
+	for (var i = 1; i < words.length; i++)
+	{
+		let word = words[i];
+		let width = this.context.measureText(current_line + " " + word).width;
+
+		if (width < width_max)
+		{
+			current_line += " " + word;
+		} else
+		{
+			lines.push(current_line);
+			current_line = word;
+		}
+	}
+
+	lines.push(current_line);
+	return this.lines = lines;
+}
+umnoto.get_padding_width = function()
+{
+	return 80;
+}
+umnoto.get_padding_height = function()
+{
+	return 120;
+}
+umnoto.get_line_height = function()
+{
+	return 86;
+}
+umnoto.get_font_size = function()
+{
+	return 78;
+}
+umnoto.get_font_family = function()
+{
+	const fonts = document.getElementById("font");
+	return "'" + fonts.options[fonts.selectedIndex].value + "', serif";
+}
+umnoto.get_max_text_width = function()
+{
+	return this.width - 2 * (this.config.margin
+		+ this.config.border_offset
+		+ this.get_padding_width());
+}
+umnoto.get_text_height = function()
+{
+	return this.lines.length * this.get_line_height()
+		+ this.config.author_height
+		+ 2* this.get_padding_height()
+		+ 2* this.config.border_offset;
+}
+umnoto.box_destination = function()
+{
+	let h = this.get_text_height();
+	return {
+		x: this.config.margin,
+		y: this.height / 2 - h / 2,
+		w: this.width - 2 * this.config.margin,
+		h: h
+	};
+}
+umnoto.box_background = function()
+{
+	let d = this.box_destination();
+	this.context.fillStyle = "rgba(0, 0, 0, .5)";
+	this.context.fillRect(d.x, d.y, d.w, d.h);
+}
+umnoto.border_destination = function()
+{
+	let h = this.get_text_height();
+	return {
+		x: this.config.margin + this.config.border_offset,
+		y: this.height / 2 - h / 2 + this.config.border_offset,
+		w: this.width - 2 * this.config.margin - 2 * this.config.border_offset,
+		h: h - 2 * this.config.border_offset
+	};
+}
+umnoto.box_border = function()
+{
+	let d = this.border_destination();
+	this.context.strokeStyle = "white";
+	this.context.strokeRect(d.x, d.y, d.w, d.h);
+}
+umnoto.quote_text = function()
+{
+	let line_height = this.get_line_height();
+	let start = this.height / 2 - line_height * this.lines.length / 2;
+
+	this.context.textAlign = 'center';
+	this.context.textBaseline = 'middle';
+	this.context.fillStyle = "white";
+
+	for (let i = 0; i < this.lines.length; i++)
+	{
+		this.context.fillText(
+			this.lines[i],
+			this.width / 2,
+			start + (i + 0.5) * line_height);
+	}
+}
+umnoto.get_author_text = function()
+{
+	return document.getElementById('author').value.trim();
+}
+umnoto.author_destination = function()
+{
+	const w = this.width * .38;
+	return {
+		x: this.width/2 - w/2,
+		y: this.height/2 + (this.lines.length * this.get_line_height())/2,
+		w: w,
+		h: this.config.author_height
+	}
+}
+umnoto.author_border = function()
+{
+	const d = this.author_destination();
+	this.context.fillStyle = "white";
+	this.context.fillRect(d.x, d.y, d.w, 2);
+}
+umnoto.author_text = function()
+{
+	this.context.font = "23px 'Roboto Slab', sans-serif";
+	this.context.textAlign = 'center';
+	this.context.textBaseline = 'middle';
+	this.context.fillStyle = "white";
+
+	const d = this.author_destination();
+	this.context.fillText(this.get_author_text(), d.x + d.w / 2, d.y + d.h / 2);
+}
+umnoto.get_credit_text = function()
+{
+	return "Снимка: "
+		+ document.getElementById("image_author").value.trim()
+		+ " "
+		+ document.getElementById("image_author_url").value.trim();
+}
+umnoto.credit_destination = function()
+{
+	this.context.font = "16px monospace";
+
+	const credit = this.get_credit_text();
+	const credit_width = this.context.measureText(credit).width;
+	const w_padding = 7;
+	const h = 32;
+
+	return {
+		x: this.width - credit_width - 2 * w_padding,
+		y: this.height - h,
+		w: credit_width + 2 * w_padding,
+		h: h
+	}
+}
+umnoto.credit_box = function()
+{
+	const d = this.credit_destination();
+	this.context.fillStyle = "rgba(0, 0, 0, .5)";
+	this.context.fillRect(d.x, d.y, d.w, d.h);
+}
+umnoto.credit_text = function()
+{
+	this.context.textAlign = 'center';
+	this.context.textBaseline = 'middle';
+	this.context.fillStyle = "white";
+
+	let d = this.credit_destination();
+	this.context.fillText(this.get_credit_text(), d.x + d.w / 2, d.y + d.h / 2);
+}
+umnoto.layers = {
+	reset: umnoto.clear,
+	background_color: umnoto.background_color,
+	background_image: umnoto.background_image,
+
+	text_font: umnoto.text_font,
+	text_lines: umnoto.text_lines,
+
+	box_background: umnoto.box_background,
+	box_border: umnoto.box_border,
+
+	quote_text: umnoto.quote_text,
+
+	author_border: umnoto.author_border,
+	author_text: umnoto.author_text,
+
+	credit_box: umnoto.credit_box,
+	credit_text: umnoto.credit_text,
+}
+umnoto.draw = function()
+{
+	const canvas = document.getElementById("image");
+	if (!canvas.getContext)
+	{
+		return;
+	}
+
+	this.context = canvas.getContext("2d");
+	this.width = parseInt(canvas.width);
+	this.height = parseInt(canvas.height);
+
+	for (let i in this.layers)
+	{
+		let layer = this.layers[i] || {};
+		if (typeof layer == 'function')
+		{
+			layer.call(this);
+		}
+	}
+}
+
+umnoto.config = (function()
+{
+	return {
+		offset_width: 10,
+		offset_height: 10,
+		margin: 30,
+		border_offset: 20,
+
+		author_height: 48
+	}
+})();
+
+document.getElementById('button').addEventListener("click", function(){ umnoto.draw() });
+</script>
+
+</body>
+<html>
